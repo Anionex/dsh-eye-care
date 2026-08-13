@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "lib": [
+      "ES2024"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "lib",
+    "declarationDir": "lib/types",
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "types": [
+      "node"
+    ]
+  },
+  "include": [
+    "src/index.ts",
+    "src/shared.ts",
+    "src/settings.ts",
+    "src/rpc.ts"
+  ],
+  "exclude": [
+    "tests",
+    "lib",
+    "node_modules"
+  ]
+}

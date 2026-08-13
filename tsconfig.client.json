@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2024",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "bundler",
+    "ignoreDeprecations": "6.0",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": "src",
+    "outDir": ".client-build",
+    "declarationDir": "lib/types",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
+    "noEmitOnError": true,
+    "types": [
+      "react",
+      "react-dom"
+    ]
+  },
+  "include": [
+    "src/shared.ts",
+    "src/client/**/*.ts",
+    "src/client/**/*.tsx"
+  ],
+  "exclude": [
+    "tests",
+    "lib",
+    ".client-build",
+    "node_modules"
+  ]
+}

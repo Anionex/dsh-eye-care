@@ -1,0 +1,99 @@
+{
+  "name": "@dsh-external/dsh-eye-care",
+  "version": "0.1.0",
+  "description": "Warm light, warm dark, and system-aware eye-care themes for DSH Web",
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "eye-care",
+    "theme",
+    "dark-mode",
+    "accessibility"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsh-external/dsh-eye-care.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dsh-external/dsh-eye-care/issues"
+  },
+  "type": "module",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "types": "./lib/types/client/index.d.ts",
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "README.md",
+    "README.zh.md",
+    "README.i18n.yaml",
+    "assets",
+    "cordis.patch.yml",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node --input-type=module -e \"import { rmSync } from 'node:fs'; for (const path of ['lib', '.client-build']) rmSync(path, { recursive: true, force: true })\" && tsc -p tsconfig.json && tsc -p tsconfig.client.json && tsdown -c tsdown.config.mjs",
+    "check": "tsc -p tsconfig.json --noEmit --pretty false && tsc -p tsconfig.client.json --noEmit --pretty false",
+    "prepack": "pnpm run build",
+    "test": "pnpm run build && vitest run"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-theme"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-api-remotes": "^0.0.1",
+    "@deepseek-ai/dsh-client-connection": "^0.0.1",
+    "@deepseek-ai/dsh-client-locale": "^0.0.1",
+    "@deepseek-ai/dsh-client-runtime": "^0.0.1",
+    "@deepseek-ai/dsh-client-ui-settings": "^0.0.1",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.0.1",
+    "@deepseek-ai/dsh-client-ui-theme": "^0.0.1",
+    "@deepseek-ai/dsh-settings": "^0.0.1",
+    "@deepseek-ai/cordis": "^4.0.1-rc.1",
+    "react": "^18.2.0",
+    "@deepseek-ai/schemastery": "^3.18.1-rc.1"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.2",
+    "@testing-library/dom": "10.4.1",
+    "@types/node": "22.20.0",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "jsdom": "29.1.1",
+    "lightningcss": "1.32.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tsdown": "0.22.2",
+    "typescript": "6.0.3",
+    "vite-tsconfig-paths": "6.1.1",
+    "vitest": "4.1.8"
+  },
+  "license": "MIT"
+}
