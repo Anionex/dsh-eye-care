@@ -86,18 +86,43 @@
   opacity: 0.65;
 }
 
-.intensityLine {
+.primaryLine,
+.settingLine {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.intensityLabel,
+.settingLabel,
 .status {
   color: var(--dsw-alias-label-tertiary);
   font-size: 11px;
   line-height: 16px;
+}
+
+.settingLabel {
+  min-width: 56px;
+}
+
+.advanced {
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.advanced > summary {
+  padding: 8px 10px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 11px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.advancedBody {
+  display: grid;
+  gap: 8px;
+  padding: 0 10px 10px;
 }
 
 .status {

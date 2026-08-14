@@ -3,7 +3,12 @@
 /** Simplified Chinese dictionary. */
 export const zh = {
   'title': '护眼模式',
-  'description': '使用暖色语义主题降低长时间阅读时的冷白刺激',
+  'description': '降低页面的冷白光感，长时间阅读更柔和。',
+  'enabled.title': '护眼模式',
+  'enabled.off': '关闭',
+  'enabled.on': '开启',
+  'advanced.title': '显示方式与暖色强度',
+  'mode.title': '显示方式',
   'mode.off': '关闭',
   'mode.auto': '自动',
   'mode.light': '日间',
@@ -28,6 +33,11 @@ export type EyeCareKey = keyof typeof zh
 export const en = {
   'title': 'Eye care',
   'description': 'Use warm semantic themes to reduce cool-white glare during long reading sessions',
+  'enabled.title': 'Eye care',
+  'enabled.off': 'Off',
+  'enabled.on': 'On',
+  'advanced.title': 'Appearance and warmth',
+  'mode.title': 'Appearance',
   'mode.off': 'Off',
   'mode.auto': 'Auto',
   'mode.light': 'Day',

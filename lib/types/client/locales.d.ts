@@ -3,6 +3,11 @@
 export declare const zh: {
     title: string;
     description: string;
+    'enabled.title': string;
+    'enabled.off': string;
+    'enabled.on': string;
+    'advanced.title': string;
+    'mode.title': string;
     'mode.off': string;
     'mode.auto': string;
     'mode.light': string;
@@ -25,6 +30,11 @@ export type EyeCareKey = keyof typeof zh;
 export declare const en: {
     title: string;
     description: string;
+    'enabled.title': string;
+    'enabled.off': string;
+    'enabled.on': string;
+    'advanced.title': string;
+    'mode.title': string;
     'mode.off': string;
     'mode.auto': string;
     'mode.light': string;
