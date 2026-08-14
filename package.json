@@ -1,5 +1,5 @@
 {
-  "name": "@dsh-external/dsh-eye-care",
+  "name": "@anionex/dsh-eye-care",
   "version": "0.1.0",
   "description": "Warm light, warm dark, and system-aware eye-care themes for DSH Web",
   "keywords": [
@@ -12,10 +12,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dsh-external/dsh-eye-care.git"
+    "url": "git+https://github.com/Anionex/dsh-eye-care.git"
   },
   "bugs": {
-    "url": "https://github.com/dsh-external/dsh-eye-care/issues"
+    "url": "https://github.com/Anionex/dsh-eye-care/issues"
   },
   "type": "module",
   "packageManager": "pnpm@11.7.0",
@@ -68,17 +68,17 @@
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-remotes": "^0.0.1",
-    "@deepseek-ai/dsh-client-connection": "^0.0.1",
-    "@deepseek-ai/dsh-client-locale": "^0.0.1",
-    "@deepseek-ai/dsh-client-runtime": "^0.0.1",
-    "@deepseek-ai/dsh-client-ui-settings": "^0.0.1",
-    "@deepseek-ai/dsh-client-ui-slots": "^0.0.1",
-    "@deepseek-ai/dsh-client-ui-theme": "^0.0.1",
-    "@deepseek-ai/dsh-settings": "^0.0.1",
-    "@deepseek-ai/cordis": "^4.0.1-rc.1",
+    "@deepseek-ai/dsh-api-remotes": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-connection": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-locale": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-client-ui-theme": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/cordis": "^4.0.1",
     "react": "^18.2.0",
-    "@deepseek-ai/schemastery": "^3.18.1-rc.1"
+    "@deepseek-ai/schemastery": "^3.18.1"
   },
   "devDependencies": {
     "@testing-library/react": "16.3.2",

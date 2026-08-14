@@ -1,4 +1,4 @@
-const id = '@dsh-external/dsh-eye-care'
+const id = '@anionex/dsh-eye-care'
 import { readFile } from 'node:fs/promises'
 import { basename, dirname, resolve } from 'node:path'
 import { transform } from 'lightningcss'
