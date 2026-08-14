@@ -28,16 +28,13 @@ DSH Web 内置的 Light 与 Dark 主题偏冷。护眼模式在不使用全局 s
 
 ## 安装
 
-该包尚未发布到包仓库，请从源码树安装：
+把公共 npm 包一键安装到 Web Profile：
 
 ```sh
-cd dsh-eye-care
-mkdir -p /tmp/dsh-eye-care
-pnpm pack --pack-destination /tmp/dsh-eye-care
-DSH_HOME="${DSH_HOME:-$HOME/.dsh}" dsh plugin --profile web add /tmp/dsh-eye-care/dsh-external-dsh-eye-care-0.1.0.tgz
+dsh plugin --profile web add @anionex/dsh-eye-care
 ```
 
-`DSH_HOME` 默认指向 `~/.dsh`；只想试用而不改动主 Profile 时，可把它指向一个临时目录。
+本地开发时，把包名替换为 checkout 的绝对路径或本地打包的 tarball。`DSH_HOME` 默认指向 `~/.dsh`；只想试用而不改动主 Profile 时，可把它指向一个临时目录。
 
 重启或启动 Web UI：
 

@@ -28,16 +28,13 @@ The screenshots above show the General settings row in warm day mode and warm ni
 
 ## Install
 
-This package is not yet published to a package registry. Install it from the source tree:
+Install the public npm package into the Web profile:
 
 ```sh
-cd dsh-eye-care
-mkdir -p /tmp/dsh-eye-care
-pnpm pack --pack-destination /tmp/dsh-eye-care
-DSH_HOME="${DSH_HOME:-$HOME/.dsh}" dsh plugin --profile web add /tmp/dsh-eye-care/dsh-external-dsh-eye-care-0.1.0.tgz
+dsh plugin --profile web add @anionex/dsh-eye-care
 ```
 
-`DSH_HOME` defaults to `~/.dsh`; point it at a temporary directory to try the bundle without changing your main profiles.
+For local development, replace the package name with the checkout's absolute path or a locally packed tarball. `DSH_HOME` defaults to `~/.dsh`; point it at a temporary directory to try the bundle without changing your main profiles.
 
 Restart or start the Web UI:
 
