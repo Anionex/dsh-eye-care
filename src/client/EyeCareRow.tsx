@@ -42,6 +42,7 @@ function statusKey(mode: EyeCareMode): EyeCareKey {
 export function EyeCareRow({ t, useEyeCare, setMode, setIntensity }: EyeCareRowProps) {
   const state = useEyeCare(value => value)
   const busy = state.status === 'loading' || state.status === 'saving'
+  const enabled = state.settings.mode !== 'off'
   const status = state.status === 'error' && state.error !== null ? state.error : t(statusKey(state.settings.mode))
   const statusText = state.status === 'unavailable' ? `${status} · ${t('status.local')}` : status
   return (
@@ -51,37 +52,67 @@ export function EyeCareRow({ t, useEyeCare, setMode, setIntensity }: EyeCareRowP
         <p className={css.description}>{t('description')}</p>
       </div>
       <div className={css.controls}>
-        <div className={css.controlGroup} role="group" aria-label={t('title')}>
-          {MODES.map(({ id, label }) => (
+        <div className={css.primaryLine}>
+          <div className={css.controlGroup} role="group" aria-label={t('enabled.title')}>
             <button
-              key={id}
               type="button"
-              className={`${css.option}${state.settings.mode === id ? ` ${css.selected}` : ''}`}
-              aria-pressed={state.settings.mode === id}
+              className={`${css.option}${!enabled ? ` ${css.selected}` : ''}`}
+              aria-pressed={!enabled}
               disabled={busy}
-              onClick={() => { void setMode(id) }}
+              onClick={() => { void setMode('off') }}
             >
-              {t(label)}
+              {t('enabled.off')}
             </button>
-          ))}
-        </div>
-        <div className={css.intensityLine}>
-          <span className={css.intensityLabel}>{t('intensity.title')}</span>
-          <div className={css.controlGroup} role="group" aria-label={t('intensity.title')}>
-            {INTENSITIES.map(({ id, label }) => (
-              <button
-                key={id}
-                type="button"
-                className={`${css.smallOption}${state.settings.intensity === id ? ` ${css.selected}` : ''}`}
-                aria-pressed={state.settings.intensity === id}
-                disabled={busy}
-                onClick={() => { void setIntensity(id) }}
-              >
-                {t(label)}
-              </button>
-            ))}
+            <button
+              type="button"
+              className={`${css.option}${enabled ? ` ${css.selected}` : ''}`}
+              aria-pressed={enabled}
+              disabled={busy}
+              onClick={() => { void setMode(state.settings.mode === 'off' ? 'auto' : state.settings.mode) }}
+            >
+              {t('enabled.on')}
+            </button>
           </div>
         </div>
+        {enabled ? <details className={css.advanced}>
+          <summary>{t('advanced.title')}</summary>
+          <div className={css.advancedBody}>
+            <div className={css.settingLine}>
+              <span className={css.settingLabel}>{t('mode.title')}</span>
+              <div className={css.controlGroup} role="group" aria-label={t('mode.title')}>
+                {MODES.filter(({ id }) => id !== 'off').map(({ id, label }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`${css.smallOption}${state.settings.mode === id ? ` ${css.selected}` : ''}`}
+                    aria-pressed={state.settings.mode === id}
+                    disabled={busy}
+                    onClick={() => { void setMode(id) }}
+                  >
+                    {t(label)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className={css.settingLine}>
+              <span className={css.settingLabel}>{t('intensity.title')}</span>
+              <div className={css.controlGroup} role="group" aria-label={t('intensity.title')}>
+                {INTENSITIES.map(({ id, label }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    className={`${css.smallOption}${state.settings.intensity === id ? ` ${css.selected}` : ''}`}
+                    aria-pressed={state.settings.intensity === id}
+                    disabled={busy}
+                    onClick={() => { void setIntensity(id) }}
+                  >
+                    {t(label)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </details> : null}
         <div className={css.status} aria-live="polite">
           {state.status === 'saving' ? t('status.saving') : statusText}
         </div>
