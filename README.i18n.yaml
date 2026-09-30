@@ -2,5 +2,5 @@
 # side as of the last confirmed-consistent state. Both languages carry equal authority;
 # after editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write dsh-eye-care/README.md
-README.md: a1992d36826adbbf5be6abd43bcad4b5366b643c
-README.zh.md: 19f5bcd0d176715622aaaf6598606a3dc4bab44e
+README.md: 9a757c05b4f3e31fe53a57b086f94cad7a857c99
+README.zh.md: b1b1008d84fdb98acb443c1f32316c7f06ca9f3c

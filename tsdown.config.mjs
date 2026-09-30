@@ -10,7 +10,6 @@ const platformModules = [
   'react-dom/client',
   'cordis',
   '@deepseek-ai/dsh-client-ui-slots',
-  '@deepseek-ai/dsh-client-runtime/client',
 ]
 const cssPrefix = '\0dsh-eye-care-css:'
 const cssSuffix = '.mjs'
@@ -21,6 +20,7 @@ export default {
   format: 'cjs',
   platform: 'browser',
   target: 'es2022',
+  define: { 'process.env.NODE_ENV': '"production"', 'import.meta.env.MODE': '"production"' },
   dts: false,
   sourcemap: true,
   clean: false,

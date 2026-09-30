@@ -42,6 +42,8 @@ export interface EyeCareSettings {
   mode: EyeCareMode
   /** Warmth applied by the active eye-care palette. */
   intensity: EyeCareIntensity
+  /** Built-in preference to restore after a token-layer host reload. */
+  restoreTheme?: 'light' | 'dark' | 'system'
 }
 
 /** Browser-safe Host snapshot returned through the loopback RPC channel. */
@@ -81,7 +83,9 @@ export function decodeEyeCareSettings(value: unknown): EyeCareSettings | undefin
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return undefined
   const record = value as Record<string, unknown>
   if (!isEyeCareMode(record[MODE_FIELD]) || !isEyeCareIntensity(record[INTENSITY_FIELD])) return undefined
-  return { mode: record[MODE_FIELD], intensity: record[INTENSITY_FIELD] }
+  const restoreTheme = record['restoreTheme']
+  if (restoreTheme !== undefined && restoreTheme !== 'light' && restoreTheme !== 'dark' && restoreTheme !== 'system') return undefined
+  return { mode: record[MODE_FIELD], intensity: record[INTENSITY_FIELD], ...(restoreTheme === undefined ? {} : { restoreTheme }) }
 }
 
 /** Decode one complete Host snapshot from the RPC boundary. */

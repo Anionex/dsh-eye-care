@@ -1,6 +1,6 @@
 import { Context } from '@deepseek-ai/cordis'
 import { describe, expect, it } from 'vitest'
-import { Settings, settingsNamespace, type SettingsNamespace } from '@deepseek-ai/dsh-settings'
+import Settings, { settingsNamespace, type SettingsNamespace } from 'dsh-settings-legacy'
 import { EYE_CARE_SETTINGS_NS, EyeCareSettingsSchema } from '../src/settings.ts'
 import { apply } from '../src/index.ts'
 

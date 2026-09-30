@@ -2,6 +2,7 @@
 import type { Context } from '@deepseek-ai/cordis';
 export { DEFAULT_EYE_CARE_SETTINGS, EYE_CARE_INTENSITIES, EYE_CARE_MODES, EYE_CARE_SETTINGS_NAMESPACE, EYE_CARE_RPC_CHANNEL, EYE_CARE_RPC_READ, EYE_CARE_RPC_SAVE, type EyeCareIntensity, type EyeCareMode, type EyeCareSettings, } from './shared.ts';
 export { EYE_CARE_SETTINGS_NS, EyeCareSettingsSchema } from './settings.ts';
+export { Config } from './settings.ts';
 export { EyeCareRpcBackend } from './rpc.ts';
 /** Required Host capability. */
 export declare const inject: string[];

@@ -1,6 +1,6 @@
 {
   "name": "@anionex/dsh-eye-care",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Warm light, warm dark, and system-aware eye-care themes for DSH Web",
   "keywords": [
     "deepseek",
@@ -43,7 +43,8 @@
     "README.i18n.yaml",
     "assets",
     "cordis.patch.yml",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "node --input-type=module -e \"import { rmSync } from 'node:fs'; for (const path of ['lib', '.client-build']) rmSync(path, { recursive: true, force: true })\" && tsc -p tsconfig.json && tsc -p tsconfig.client.json && tsdown -c tsdown.config.mjs",
@@ -58,8 +59,8 @@
     "client": {
       "platform": "web",
       "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
         "@deepseek-ai/dsh-client-connection",
-        "@deepseek-ai/dsh-client-runtime",
         "@deepseek-ai/dsh-client-locale",
         "@deepseek-ai/dsh-client-ui-settings",
         "@deepseek-ai/dsh-api-remotes",
@@ -67,14 +68,15 @@
       ]
     },
     "compatibility": {
-      "dsh": ">=0.1.0-rc.8 <0.2.0",
+      "dsh": ">=0.1.0-rc.8 <0.2.0 || 0.2.0-rc.2",
       "dshReleases": {
         "0.1.0-rc.8": "compatible",
         "0.1.1-rc.1": "compatible",
         "0.1.1-rc.2": "compatible",
         "0.1.2-alpha.3": "compatible",
         "0.1.2-alpha.4": "compatible",
-        "0.1.2-alpha.5": "compatible"
+        "0.1.2-alpha.5": "compatible",
+        "0.2.0-rc.2": "compatible"
       },
       "profiles": [
         "web"
@@ -82,17 +84,17 @@
     }
   },
   "peerDependencies": {
-    "@deepseek-ai/dsh-api-remotes": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-connection": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-locale": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-runtime": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-client-ui-theme": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-api-remotes": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-connection": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-locale": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-theme": "^0.1.0-rc.6 || 0.2.0-rc.2",
+    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6 || 0.2.0-rc.2",
     "@deepseek-ai/cordis": "^4.0.1",
     "react": "^18.2.0",
-    "@deepseek-ai/schemastery": "^3.18.1"
+    "@deepseek-ai/schemastery": "^3.18.1",
+    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6 || 0.2.0-rc.2"
   },
   "devDependencies": {
     "@testing-library/react": "16.3.2",
@@ -107,7 +109,22 @@
     "tsdown": "0.22.2",
     "typescript": "6.0.3",
     "vite-tsconfig-paths": "6.1.1",
-    "vitest": "4.1.8"
+    "vitest": "4.1.8",
+    "@deepseek-ai/dsh-client-store": "0.2.0-rc.2",
+    "zustand": "~4.4.7",
+    "immer": "^10.1.1",
+    "@deepseek-ai/dsh-api-remotes": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-connection": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-locale": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-settings": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-slots": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-theme": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-settings": "0.2.0-rc.2",
+    "@deepseek-ai/cordis": "4.0.4",
+    "@deepseek-ai/schemastery": "3.18.4",
+    "@deepseek-ai/dsh-host-webserver": "0.2.0-rc.2",
+    "@deepseek-ai/dsh-client-ui-renderer": "0.2.0-rc.2",
+    "dsh-settings-legacy": "npm:@deepseek-ai/dsh-settings@0.1.0-rc.6"
   },
   "license": "MIT"
 }

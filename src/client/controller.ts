@@ -1,7 +1,7 @@
 /** Eye-care state owner: durable settings synchronization plus theme lifecycle. */
 
 import type { ClientConnectionRpc } from '@deepseek-ai/dsh-client-connection/client'
-import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-runtime/client'
+import { createSnapshotStore, type SnapshotStore } from '@deepseek-ai/dsh-client-store'
 import type { ThemeRuntime, ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client'
 import {
   DEFAULT_EYE_CARE_SETTINGS,
@@ -37,7 +37,7 @@ export interface EyeCareState {
 /** Inputs isolated for deterministic controller tests. */
 export interface EyeCareControllerOptions {
   /** DSH theme registry. */
-  theme: Pick<ThemeRuntime, 'getTheme' | 'setTheme' | 'register'>
+  theme: Pick<ThemeRuntime, 'getTheme' | 'setTheme' | 'register'> & Partial<Pick<ThemeRuntime, 'overrideTokens'>>
   /** Snapshot change subscription. */
   subscribeTheme(listener: (snapshot: ThemeSnapshot) => void): () => void
   /** Loopback-only Connection RPC; absent remote browsers stay process-local. */
@@ -89,6 +89,8 @@ export class EyeCareController {
   private acceptedRemoteSnapshot = false
   private startupBaseTheme: 'light' | 'dark' | 'system' | undefined
   private startupBaseThemeDeadline = 0
+  private removeTokenLayer: (() => void) | undefined
+  private activeBaseTheme: string | undefined
 
   /**
    * Register the concrete themes and lifecycle listeners.
@@ -187,7 +189,9 @@ export class EyeCareController {
     await this.tail
 
     const current = this.theme.getTheme()
-    if (isEyeCareThemeId(current.preference)) {
+    this.removeTokenLayer?.()
+    this.removeTokenLayer = undefined
+    if (isEyeCareThemeId(current.preference) || current.preference === this.activeBaseTheme) {
       try {
         this.setTheme(this.resolveRestoreTheme())
       } catch (error) {
@@ -233,7 +237,11 @@ export class EyeCareController {
       this.setUnavailable(state.error)
       return Promise.resolve()
     }
-    this.pendingSettings = { ...settings }
+    this.pendingSettings = { mode: settings.mode, intensity: settings.intensity }
+    if (this.theme.overrideTokens !== undefined && settings.mode !== 'off'
+      && (this.restoreTheme === 'light' || this.restoreTheme === 'dark' || this.restoreTheme === 'system')) {
+      this.pendingSettings.restoreTheme = this.restoreTheme
+    }
     return this.enqueue(async () => { await this.flushPending() })
   }
 
@@ -336,7 +344,7 @@ export class EyeCareController {
         this.hasRestoreTheme = true
       }
     } else if (firstRemote) {
-      const base = snapshot.baseThemePreference
+      const base = next.restoreTheme ?? snapshot.baseThemePreference
       if (base === undefined) {
         if (!this.hasRestoreTheme) this.captureRestoreTheme()
       } else {
@@ -388,12 +396,31 @@ export class EyeCareController {
     const { mode, intensity } = this.store.getSnapshot().settings
     const current = this.theme.getTheme().preference
     if (mode === 'off') {
-      if (isEyeCareThemeId(current)) this.setTheme(this.resolveRestoreTheme())
+      this.applyingTheme += 1
+      try {
+        this.removeTokenLayer?.()
+        this.removeTokenLayer = undefined
+        if (isEyeCareThemeId(current) || current === this.activeBaseTheme) this.setTheme(this.resolveRestoreTheme())
+        this.activeBaseTheme = undefined
+      } finally { this.applyingTheme -= 1 }
       this.hasRestoreTheme = false
       return
     }
     if (!this.hasRestoreTheme) this.captureRestoreTheme()
     const scheme = mode === 'auto' ? (this.media?.matches === true ? 'dark' : 'light') : mode
+    // ConfigForms hosts re-adopt their durable built-in preference on every
+    // settings refresh. Use the public token layer so warmth survives adoption.
+    if (this.theme.overrideTokens !== undefined) {
+      const definition = EYE_CARE_THEMES.find(theme => theme.id === eyeCareThemeId(scheme, intensity))!
+      const tokens = Object.fromEntries(Object.entries(definition.tokens).map(([name, value]) => [name, { light: value, dark: value }]))
+      this.applyingTheme += 1
+      try {
+        this.activeBaseTheme = mode === 'auto' ? 'system' : mode
+        this.removeTokenLayer = this.theme.overrideTokens('@anionex/dsh-eye-care', tokens)
+        this.setTheme(this.activeBaseTheme)
+      } finally { this.applyingTheme -= 1 }
+      return
+    }
     this.setTheme(eyeCareThemeId(scheme, intensity))
   }
 
@@ -409,6 +436,7 @@ export class EyeCareController {
 
   private onThemeChanged(snapshot: ThemeSnapshot): void {
     if (this.disposed || this.applyingTheme > 0 || isEyeCareThemeId(snapshot.preference)) return
+    if (snapshot.preference === this.activeBaseTheme) return
     if (this.startupBaseTheme !== undefined) {
       const expected = this.startupBaseTheme
       const withinStartupWindow = this.now() <= this.startupBaseThemeDeadline
@@ -430,6 +458,7 @@ export class EyeCareController {
       next.settings = settings
       next.error = null
     })
+    this.applyCurrentTheme()
     void this.persist(settings)
   }
 }

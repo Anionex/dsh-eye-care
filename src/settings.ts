@@ -1,7 +1,7 @@
 /** Host-only schema and branded namespace for eye-care settings. */
 
 import z from '@deepseek-ai/schemastery'
-import { settingsNamespace } from '@deepseek-ai/dsh-settings'
+import SettingsService, { type SettingsNamespace } from '@deepseek-ai/dsh-settings'
 import {
   DEFAULT_EYE_CARE_SETTINGS,
   EYE_CARE_INTENSITIES,
@@ -13,10 +13,19 @@ import {
 } from './shared.ts'
 
 /** Branded settings namespace used by the Host service. */
-export const EYE_CARE_SETTINGS_NS = settingsNamespace(EYE_CARE_SETTINGS_NAMESPACE)
+export const EYE_CARE_SETTINGS_NS = EYE_CARE_SETTINGS_NAMESPACE as SettingsNamespace
 
 /** Host schema for the eye-care settings section. */
 export const EyeCareSettingsSchema: z<EyeCareSettings> = z.object({
   [MODE_FIELD]: z.union([...EYE_CARE_MODES]).default(DEFAULT_EYE_CARE_SETTINGS.mode),
   [INTENSITY_FIELD]: z.union([...EYE_CARE_INTENSITIES]).default(DEFAULT_EYE_CARE_SETTINGS.intensity),
+  restoreTheme: z.union(['light', 'dark', 'system']),
 })
+
+/** Modern Settings projects live Config fields; legacy hosts register a section. */
+export const Config: z<EyeCareSettings> = (() => {
+  if (typeof (SettingsService.prototype as { register?: unknown }).register === 'function') return EyeCareSettingsSchema
+  const schema = new z(EyeCareSettingsSchema.toJSON()) as z<EyeCareSettings>
+  for (const field of Object.values(schema.dict ?? {})) field.meta.volatile = true
+  return schema
+})()

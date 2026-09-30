@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { bindSnapshotSelector } from '@deepseek-ai/dsh-client-web-react'
-import { createSnapshotStore } from '@deepseek-ai/dsh-client-runtime/client'
+import { useSyncExternalStore } from 'react'
+const bindSnapshotSelector = <T,>(store: { subscribe: (listener: () => void) => () => void; getSnapshot: () => T }) => <S,>(select: (state: T) => S) => select(useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot))
+import { createSnapshotStore } from '@deepseek-ai/dsh-client-store'
 import { EyeCareRow } from '../src/client/EyeCareRow.tsx'
 import type { EyeCareState } from '../src/client/controller.ts'
 

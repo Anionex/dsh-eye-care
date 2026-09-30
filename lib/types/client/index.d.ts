@@ -1,5 +1,5 @@
 /** DSH Web browser half for the eye-care profile bundle. */
-import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client';
+import type { Context as ClientContext } from '@deepseek-ai/cordis';
 import type { ThemeRuntime } from '@deepseek-ai/dsh-client-ui-theme/client';
 import { type EyeCareKey } from './locales.ts';
 /** Required browser services. */

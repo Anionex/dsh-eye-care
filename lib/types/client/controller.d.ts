@@ -1,6 +1,6 @@
 /** Eye-care state owner: durable settings synchronization plus theme lifecycle. */
 import type { ClientConnectionRpc } from '@deepseek-ai/dsh-client-connection/client';
-import { type SnapshotStore } from '@deepseek-ai/dsh-client-runtime/client';
+import { type SnapshotStore } from '@deepseek-ai/dsh-client-store';
 import type { ThemeRuntime, ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client';
 import { type EyeCareIntensity, type EyeCareMode, type EyeCareSettings } from '../shared.ts';
 /** State consumed by the General-settings row. */
@@ -19,7 +19,7 @@ export interface EyeCareState {
 /** Inputs isolated for deterministic controller tests. */
 export interface EyeCareControllerOptions {
     /** DSH theme registry. */
-    theme: Pick<ThemeRuntime, 'getTheme' | 'setTheme' | 'register'>;
+    theme: Pick<ThemeRuntime, 'getTheme' | 'setTheme' | 'register'> & Partial<Pick<ThemeRuntime, 'overrideTokens'>>;
     /** Snapshot change subscription. */
     subscribeTheme(listener: (snapshot: ThemeSnapshot) => void): () => void;
     /** Loopback-only Connection RPC; absent remote browsers stay process-local. */
@@ -50,6 +50,8 @@ export declare class EyeCareController {
     private acceptedRemoteSnapshot;
     private startupBaseTheme;
     private startupBaseThemeDeadline;
+    private removeTokenLayer;
+    private activeBaseTheme;
     /**
      * Register the concrete themes and lifecycle listeners.
      * @param options - theme, transport, and system-scheme collaborators.
