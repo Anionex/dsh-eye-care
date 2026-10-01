@@ -14,9 +14,10 @@ import {
   type EyeCareSettingsWriteRequest,
 } from './shared.ts'
 import { EYE_CARE_SETTINGS_NS } from './settings.ts'
+import { installLoopbackTransport } from './transport.ts'
 
 function descriptorOf(ctx: Context): SettingsDescriptor {
-  const descriptor = ctx.settings.describe().find(row => row.ns === EYE_CARE_SETTINGS_NS)
+  const descriptor = ctx.settings.describe().find(row => row.ns === EYE_CARE_SETTINGS_NS || String(row.ns) === 'dsh-eye-care')
   if (descriptor === undefined) throw new Error('eye-care settings namespace is not registered')
   return descriptor
 }
@@ -96,7 +97,7 @@ export class EyeCareRpcBackend {
     }
     try {
       if (!this.ctx.settings.writable) throw new Error('settings provider is read-only')
-      await this.ctx.settings.replace(EYE_CARE_SETTINGS_NS, request.value, request.expectedRevision)
+      await this.ctx.settings.replace(descriptorOf(this.ctx).ns, request.value, request.expectedRevision)
       return { ok: true, value: this.snapshot() }
     } catch (error) {
       if (error instanceof SettingsConflictError) {
@@ -129,7 +130,12 @@ export class EyeCareRpcBackend {
 export function installEyeCareRpc(ctx: Context): void {
   const backend = new EyeCareRpcBackend(ctx)
   ctx.inject(['connection'], (connectionCtx) => {
-    connectionCtx.connection.rpc.handle(
+    if (typeof connectionCtx.connection.requestRejection === 'function') {
+      installLoopbackTransport(connectionCtx, backend.handle)
+      return
+    }
+    const legacy = connectionCtx.connection as unknown as { rpc: { handle: (channel: string, handler: ConnectionRpcHandler, options: { authority: 'loopback' }) => unknown } }
+    legacy.rpc.handle(
       EYE_CARE_RPC_CHANNEL,
       backend.handle,
       { authority: 'loopback' },

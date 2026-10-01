@@ -47,6 +47,7 @@ interface HarnessOptions {
   media?: FakeMedia
   now?: () => number
   deferSave?: boolean
+  tokenLayers?: boolean
 }
 
 function harness(options: HarnessOptions = {}) {
@@ -59,6 +60,7 @@ function harness(options: HarnessOptions = {}) {
   const unsubscribeTheme = vi.fn(() => { listeners.clear() })
   const unregisterThemes: Array<ReturnType<typeof vi.fn>> = []
   const theme = {
+    ...(options.tokenLayers ? { overrideTokens: vi.fn(() => vi.fn()) } : {}),
     getTheme: vi.fn(() => ({
       preference,
       active: EYE_CARE_THEMES.find(theme => theme.id === preference) ?? { id: preference, colorScheme: 'light', tokens: {} },
@@ -124,6 +126,32 @@ function harness(options: HarnessOptions = {}) {
 }
 
 describe('EyeCareController', () => {
+  it('keeps a token layer through ConfigForms adoption and removes it on Appearance opt-out', async () => {
+    const b = harness({ tokenLayers: true })
+    await b.controller.load()
+    await b.controller.setMode('light')
+    b.theme.setTheme('light')
+    expect(b.controller.store.getSnapshot().settings.mode).toBe('light')
+    expect(b.theme.overrideTokens).toHaveBeenCalled()
+    expect(b.getSettings().mode).toBe('light')
+    b.theme.setTheme('dark')
+    await vi.waitFor(() => { expect(b.getSettings().mode).toBe('off') })
+    await b.controller.dispose()
+  })
+
+  it('restores the original Appearance after a token-layer host reload', async () => {
+    const b = harness({ tokenLayers: true })
+    await b.controller.load()
+    await b.controller.setMode('dark')
+    expect(b.getSettings()).toMatchObject({ restoreTheme: 'system' })
+    const restored = harness({ tokenLayers: true, preference: 'dark', settings: b.getSettings() })
+    await restored.controller.load()
+    await restored.controller.setMode('off')
+    expect(restored.theme.getTheme().preference).toBe('system')
+    await restored.controller.dispose()
+    await b.controller.dispose()
+  })
+
   it('loads and follows auto mode when the system scheme changes', async () => {
     const sensor = media(false)
     const b = harness({ settings: { mode: 'auto', intensity: 'soft' }, media: sensor })

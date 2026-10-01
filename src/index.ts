@@ -18,6 +18,7 @@ export {
   type EyeCareSettings,
 } from './shared.ts'
 export { EYE_CARE_SETTINGS_NS, EyeCareSettingsSchema } from './settings.ts'
+export { Config } from './settings.ts'
 export { EyeCareRpcBackend } from './rpc.ts'
 
 /** Required Host capability. */
@@ -25,6 +26,7 @@ export const inject = ['settings']
 
 /** Register the durable namespace and the optional loopback browser transport. */
 export function apply(ctx: Context): void {
-  ctx.settings.register(EYE_CARE_SETTINGS_NS, EyeCareSettingsSchema)
+  const settings = ctx.settings as unknown as { register?: (ns: string, schema: typeof EyeCareSettingsSchema) => unknown }
+  settings.register?.(EYE_CARE_SETTINGS_NS, EyeCareSettingsSchema)
   installEyeCareRpc(ctx)
 }

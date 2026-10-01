@@ -53,12 +53,13 @@ Open **Settings → General → Eye care** and choose a mode and warmth.
 
 ## How it works
 
-The Host half registers the `eye-care` Settings namespace and exposes a loopback-only Connection RPC channel `/eye-care`. Writes are serialized and fenced by `expectedRevision`; a conflict re-reads the Host snapshot and retries the latest intent.
+The Host half uses the legacy `eye-care` Settings namespace or the modern `dsh-eye-care` Config projection, and exposes the loopback-only `/eye-care` RPC route. Writes are serialized and fenced by `expectedRevision`; a conflict re-reads the Host snapshot and retries the latest intent.
 
-The browser half registers the six themes, injects the General-settings row, and owns the controller lifecycle. The controller subscribes to `theme/change` and `prefers-color-scheme`, restores the pre-eye-care theme on disable or unload, and unregisters every theme on dispose. Remote browsers do not inject the Host RPC and therefore stay process-local.
+The browser half registers six palettes and injects the General-settings row. On newer hosts it uses the public theme token layer so ConfigForms refreshes cannot clear the warmth. The original built-in Appearance preference is retained across reloads and restored on disable. Legacy hosts continue using registered themes. The controller removes its listeners, themes, and token layer on disposal. Remote browsers keep preferences process-local.
 
 ## Compatibility and limitations
 
+- Candidate 0.1.2 targets DSH `0.2.0-rc.2`; Web installation, loading, mode changes, and persistence were tested, with a `0.1.5-rc.1` regression profile. Publication is pending.
 - Requires a DeepSeek Harness Web profile with the standard `settings`, `connection`, `locale`, `slots`, and `theme` services.
 - A native Appearance change is treated as an explicit opt-out by design.
 - Remote browser sessions do not persist eye care back to the Host.

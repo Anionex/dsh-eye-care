@@ -53,12 +53,13 @@ dsh web
 
 ## 工作原理
 
-Host 半区注册 `eye-care` Settings 命名空间，并暴露仅限 loopback 的 Connection RPC 通道 `/eye-care`。写入串行执行，并以 `expectedRevision` 做版本栅栏；发生冲突时重新读取 Host 快照，再重试最新意图。
+Host 半区使用旧版 `eye-care` Settings 命名空间或新版 `dsh-eye-care` Config 投影，并提供仅限 loopback 的 `/eye-care` RPC 路由。写入串行执行，并以 `expectedRevision` 做版本栅栏；发生冲突时重新读取 Host 快照，再重试最新意图。
 
-Browser 半区注册六套主题，注入 General 设置行，并管理控制器生命周期。控制器订阅 `theme/change` 与 `prefers-color-scheme`，在关闭或卸载时恢复启用护眼前的主题，并在 dispose 时注销全部主题。远程浏览器不注入 Host RPC，因此选择保持进程本地。
+Browser 半区注册六套配色，并注入 General 设置行。在新版宿主中使用公开的主题 token 层，避免 ConfigForms 刷新清除暖色；原始内置外观选择会跨刷新保留，并在关闭护眼时恢复。旧版宿主继续使用注册主题。控制器销毁时清除监听、主题和 token 层。远程浏览器的选择仅在当前浏览器生效。
 
 ## 兼容性与限制
 
+- 候选版 0.1.2 面向 DSH `0.2.0-rc.2`；已实测 Web 安装、加载、模式切换和持久化，并用 `0.1.5-rc.1` Profile 回归。尚未发布。
 - 需要包含标准 `settings`、`connection`、`locale`、`slots` 和 `theme` 服务的 DeepSeek Harness Web Profile。
 - 原生外观切换按设计视为明确退出护眼模式。
 - 远程浏览器会话不会把护眼选择回写到 Host。

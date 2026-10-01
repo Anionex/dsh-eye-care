@@ -1,7 +1,8 @@
 /** DSH Web browser half for the eye-care profile bundle. */
 
+import type {} from '@deepseek-ai/dsh-client-ui-renderer/client'
 import type { ConnectionHandle } from '@deepseek-ai/dsh-client-connection/client'
-import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
+import type { Context as ClientContext } from '@deepseek-ai/cordis'
 import type { ThemeRuntime, ThemeSnapshot } from '@deepseek-ai/dsh-client-ui-theme/client'
 import type {} from '@deepseek-ai/dsh-client-ui-settings/client'
 import type {} from '@deepseek-ai/dsh-api-remotes/client'
@@ -36,7 +37,7 @@ export function apply(ctx: EyeCareClientContext): void {
   ctx.effect(() => ctx.locale.register('settings.eyeCare', { zh, en }), 'dsh-eye-care: dictionaries')
   ctx.effect(() => {
     const refresh = (namespace?: string): void => {
-      if (namespace !== undefined && namespace !== 'eye-care') return
+      if (namespace !== undefined && namespace !== 'eye-care' && namespace !== 'dsh-eye-care') return
       controller.refresh()
     }
     const disposers = [

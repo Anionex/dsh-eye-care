@@ -27,6 +27,8 @@ export interface EyeCareSettings {
     mode: EyeCareMode;
     /** Warmth applied by the active eye-care palette. */
     intensity: EyeCareIntensity;
+    /** Built-in preference to restore after a token-layer host reload. */
+    restoreTheme?: 'light' | 'dark' | 'system';
 }
 /** Browser-safe Host snapshot returned through the loopback RPC channel. */
 export interface EyeCareSettingsSnapshot {
